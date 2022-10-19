@@ -172,11 +172,48 @@ void drawLines() {
     drawLine(-4.5, 18.5, 4.5, 18.5);
 }
 
+void drawCirclePoints(GLdouble xc, GLdouble yc, GLdouble x, GLdouble y) {
+	glBegin(GL_POINTS);
+    glVertex3d(yc+y, 0, xc+x);
+    glVertex3d(yc+y, 0, xc-x);
+    glVertex3d(yc-y, 0, xc+x);
+    glVertex3d(yc-y, 0, xc-x);
+    glVertex3d(yc+x, 0, xc+y);
+    glVertex3d(yc+x, 0, xc-y);
+    glVertex3d(yc-x, 0, xc+y);
+    glVertex3d(yc-x, 0, xc-y);
+	glEnd();
+}
+
+void drawCircle(GLdouble xc, GLdouble yc, GLdouble r) {
+	GLdouble x = 0;
+	GLdouble y = r;
+	GLdouble d = 5/4 - r;
+
+    glColor3f(1, 1, 1);
+    glPointSize(4);
+
+    drawCirclePoints(xc, yc, x, y);
+
+	while (y > x) {
+		if (d < 0) {
+			d += 2 * x;
+			x += 0.1;
+		} else {
+			d += 2 * (x-y) + 1;
+			x += 0.1;
+			y -= 0.1;
+		}
+		drawCirclePoints(xc, yc, x, y);
+	}
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawField();
     drawLines();
+    drawCircle(0, 0, 7.0);
     drawBall();
     drawCrossbars();
 
