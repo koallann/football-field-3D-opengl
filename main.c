@@ -208,6 +208,218 @@ void drawCircle(GLdouble xc, GLdouble yc, GLdouble r) {
 	}
 }
 
+// score
+
+int lScoreH1, lScoreH2, lScoreH3, lScoreH4;
+int lScoreV1, lScoreV2, lScoreV3;
+
+void turnOff() {
+    lScoreH1 = lScoreH2 = lScoreH3 = lScoreH4 = 0;
+    lScoreV1 = lScoreV2 = lScoreV3 = 0;
+}
+void lTurnOnZero() {
+    lScoreH1 = lScoreH2 = lScoreH3 = lScoreH4 = 1;
+    lScoreV1 = lScoreV3 = 1;
+}
+void lTurnOnOne() {
+    lScoreH1 = lScoreH2 = 1;
+}
+void lTurnOnTwo() {
+    lScoreH1 = lScoreH3 = 1;
+    lScoreV1 = lScoreV2 = lScoreV3 = 1;
+}
+void lTurnOnThree() {
+    lScoreH1 = lScoreH2 = 1;
+    lScoreV1 = lScoreV2 = lScoreV3 = 1;
+}
+void lTurnOnFour() {
+    lScoreH1 = lScoreH2 = lScoreH4 = 1;
+    lScoreV2 = 1;
+}
+void lTurnOnFive() {
+    lScoreH2 = lScoreH4 = 1;
+    lScoreV1 = lScoreV2 = lScoreV3 = 1;
+}
+void lTurnOnSix() {
+    lScoreH2 = lScoreH3 = lScoreH4 = 1;
+    lScoreV1 = lScoreV2 = lScoreV3 = 1;
+}
+void lTurnOnSeven() {
+    lScoreH1 = lScoreH2 = 1;
+    lScoreV1 = 1;
+}
+void lTurnOnEight() {
+    lScoreH1 = lScoreH2 = lScoreH3 = lScoreH4 = 1;
+    lScoreV1 = lScoreV2 = lScoreV3 = 1;
+}
+void lTurnOnNine() {
+    lScoreH1 = lScoreH2 = lScoreH4 = 1;
+    lScoreV1 = lScoreV2 = 1;
+}
+void lTurnOn(int value) {
+    turnOff();
+    switch (value) {
+        case 0:
+            lTurnOnZero();
+            break;
+        case 1:
+            lTurnOnOne();
+            break;
+        case 2:
+            lTurnOnTwo();
+            break;
+        case 3:
+            lTurnOnThree();
+            break;
+        case 4:
+            lTurnOnFour();
+            break;
+        case 5:
+            lTurnOnFive();
+            break;
+        case 6:
+            lTurnOnSix();
+            break;
+        case 7:
+            lTurnOnSeven();
+            break;
+        case 8:
+            lTurnOnEight();
+            break;
+        case 9:
+            lTurnOnNine();
+            break;
+        default:
+            break;
+    }
+}
+
+void drawLeftScore() {
+    glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(0, 4, -15);
+        glScalef(15, 8, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    // vertical lines
+    
+    glPushMatrix();
+        lScoreH1 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-2, 5, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreH2 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-2, 3, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreH3 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-4, 3, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreH4 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-4, 5, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    // horizontal lines
+
+    glPushMatrix();
+        lScoreV1 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-3, 6, -15);
+        glScalef(1, 0.2, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreV2 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-3, 4, -15);
+        glScalef(1, 0.2, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreV3 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(-3, 2, -15);
+        glScalef(1, 0.2, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+}
+
+void drawRightScore() {
+    int offset = 6;
+
+    glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(offset + 0, 4, -15);
+        glScalef(15, 8, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    // vertical lines
+    
+    glPushMatrix();
+        lScoreH1 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -2, 5, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreH2 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -2, 3, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreH3 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -4, 3, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreH4 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -4, 5, -15);
+        glScalef(0.2, 1.5, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    // horizontal lines
+
+    glPushMatrix();
+        lScoreV1 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -3, 6, -15);
+        glScalef(1, 0.2, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreV2 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -3, 4, -15);
+        glScalef(1, 0.2, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        lScoreV3 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
+        glTranslatef(offset + -3, 2, -15);
+        glScalef(1, 0.2, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -216,6 +428,7 @@ void display() {
     drawCircle(0, 0, 7.0);
     drawBall();
     drawCrossbars();
+    drawLeftScore();
 
     glFlush();
 }
@@ -250,9 +463,10 @@ void checkBallWithinLeftNet() {
     
     if (ballTranslateX >= netStartLimitX && ballTranslateX <= netEndLimitX
         && ballTranslateZ >= netStartLimitZ && ballTranslateZ <= netEndLimitZ) {
-        if (!ballWithinLeftNet) {
+        if (!ballWithinLeftNet && leftGoals < 9) {
             leftGoals++;
-            printf("%d x %d\n", leftGoals, rightGoals);
+            lTurnOn(leftGoals);
+            printf("GOOOOLLL!!");
         }
         ballWithinLeftNet = 1;
     } else {
