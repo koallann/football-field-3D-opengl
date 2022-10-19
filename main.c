@@ -23,6 +23,9 @@ GLfloat CROSSBAR_LENGTH = 5.0f,
 
 GLdouble RADIUS_BALL = 0.25;
 
+GLdouble SPEED_BALL = 0.25;
+GLdouble SPEED_CAMERA = 0.5;
+
 // control variables
 
 GLfloat aspect = 1;
@@ -34,13 +37,20 @@ GLdouble obsX = 0,
 GLfloat ballTranslateX = 0,
         ballTranslateZ = 0;
 
-GLfloat ballRotateX = 0,
-        ballRotateZ = 0;
+GLdouble LIMIT_TOP_X;
+GLdouble LIMIT_BOTTOM_X;
+GLdouble LIMIT_TOP_Z;
+GLdouble LIMIT_BOTTOM_Z;
 
 // functions
 
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
+
+    LIMIT_TOP_X = GROUND_LENGTH / 2;
+    LIMIT_BOTTOM_X = -1 * LIMIT_TOP_X;
+    LIMIT_BOTTOM_Z = GROUND_WIDTH / 2;
+    LIMIT_TOP_Z = -1 * LIMIT_BOTTOM_Z;
 }
 
 void drawField() {
@@ -99,7 +109,6 @@ void display() {
     drawField();
     drawBall();
     drawCrossbars();
-    drawLines();
 
     glFlush();
 }
@@ -129,16 +138,16 @@ void reshape(int width, int height) {
 void onKeyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'w':
-            ballTranslateZ -= 0.25f;
+            if (ballTranslateZ >= LIMIT_TOP_Z) ballTranslateZ -= SPEED_BALL;
             break;
 		case 'a':
-            ballTranslateX -= 0.25f;
+            if (ballTranslateX >= LIMIT_BOTTOM_X) ballTranslateX -= SPEED_BALL;
 			break;
 		case 's':
-            ballTranslateZ += 0.25f;
+            if (ballTranslateZ <= LIMIT_BOTTOM_Z) ballTranslateZ += SPEED_BALL;
 			break;
 		case 'd':
-            ballTranslateX += 0.25f;
+            if (ballTranslateX <= LIMIT_TOP_X) ballTranslateX += SPEED_BALL;
 			break;
 		default:
 			break;
@@ -149,22 +158,22 @@ void onKeyPress(unsigned char key, int x, int y) {
 void onSpecialKeyPress(int key, int x, int y) {
     switch (key) {
 		case GLUT_KEY_LEFT:
-            obsX -= 1;
+            obsX -= SPEED_CAMERA;
 			break;
         case GLUT_KEY_RIGHT:
-			obsX += 1;
+			obsX += SPEED_CAMERA;
             break;
 		case GLUT_KEY_UP:
-			obsY += 1;
+			obsY += SPEED_CAMERA;
             break;
 		case GLUT_KEY_DOWN:
-            obsY -= 1;
+            obsY -= SPEED_CAMERA;
 			break;
         case GLUT_KEY_PAGE_UP:
-            obsZ -= 1;
+            obsZ -= SPEED_CAMERA;
             break;
         case GLUT_KEY_PAGE_DOWN:
-            obsZ += 1;
+            obsZ += SPEED_CAMERA;
             break;
 		default:
 			break;
