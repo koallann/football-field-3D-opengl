@@ -37,20 +37,28 @@ GLdouble obsX = 0,
 GLfloat ballTranslateX = 0,
         ballTranslateZ = 0;
 
-GLdouble LIMIT_TOP_X;
-GLdouble LIMIT_BOTTOM_X;
-GLdouble LIMIT_TOP_Z;
-GLdouble LIMIT_BOTTOM_Z;
+GLdouble LIMIT_FIELD_TOP_X;
+GLdouble LIMIT_FIELD_BOTTOM_X;
+GLdouble LIMIT_FIELD_TOP_Z;
+GLdouble LIMIT_FIELD_BOTTOM_Z;
+
+GLdouble LIMIT_GROUND_BOTTOM_X;
+GLdouble LIMIT_GROUND_TOP_X;
+
+int ballWithinLeftNet = 0;
+int leftGoals = 0;
+int ballWithinRightNet = 0;
+int rightGoals = 0;
 
 // functions
 
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
 
-    LIMIT_TOP_X = GROUND_LENGTH / 2;
-    LIMIT_BOTTOM_X = -1 * LIMIT_TOP_X;
-    LIMIT_BOTTOM_Z = GROUND_WIDTH / 2;
-    LIMIT_TOP_Z = -1 * LIMIT_BOTTOM_Z;
+    LIMIT_FIELD_TOP_X = (GROUND_LENGTH / 2);
+    LIMIT_FIELD_BOTTOM_X = -1 * (GROUND_LENGTH / 2);
+    LIMIT_FIELD_TOP_Z = -1 * (GROUND_WIDTH / 2);
+    LIMIT_FIELD_BOTTOM_Z = (GROUND_WIDTH / 2);
 }
 
 void drawField() {
@@ -135,23 +143,61 @@ void reshape(int width, int height) {
     view();
 }
 
+void checkBallWithinLeftNet() {
+    GLdouble netStartLimitX = -1 * (GROUND_LENGTH / 2);
+    GLdouble netEndLimitX = netStartLimitX + (GROUND_LENGTH - FIELD_LENGTH) / 2;
+    GLdouble netStartLimitZ = -1 * (CROSSBAR_LENGTH / 2);
+    GLdouble netEndLimitZ = CROSSBAR_LENGTH / 2;
+    
+    if (ballTranslateX >= netStartLimitX && ballTranslateX <= netEndLimitX
+        && ballTranslateZ >= netStartLimitZ && ballTranslateZ <= netEndLimitZ) {
+        if (!ballWithinLeftNet) {
+            leftGoals++;
+            printf("%d x %d\n", leftGoals, rightGoals);
+        }
+        ballWithinLeftNet = 1;
+    } else {
+        ballWithinLeftNet = 0;
+    }
+}
+
+void checkBallWithinRightNet() {
+    GLdouble netStartLimitX = (GROUND_LENGTH / 2) - (GROUND_LENGTH - FIELD_LENGTH) / 2;
+    GLdouble netEndLimitX = GROUND_LENGTH / 2;
+    GLdouble netStartLimitZ = -1 * (CROSSBAR_LENGTH / 2);
+    GLdouble netEndLimitZ = CROSSBAR_LENGTH / 2;
+    
+    if (ballTranslateX >= netStartLimitX && ballTranslateX <= netEndLimitX
+        && ballTranslateZ >= netStartLimitZ && ballTranslateZ <= netEndLimitZ) {
+        if (!ballWithinRightNet) {
+            rightGoals++;
+            printf("%d x %d\n", leftGoals, rightGoals);
+        }
+        ballWithinRightNet = 1;
+    } else {
+        ballWithinRightNet = 0;
+    }
+}
+
 void onKeyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'w':
-            if (ballTranslateZ >= LIMIT_TOP_Z) ballTranslateZ -= SPEED_BALL;
+            if (ballTranslateZ >= LIMIT_FIELD_TOP_Z) ballTranslateZ -= SPEED_BALL;
             break;
 		case 'a':
-            if (ballTranslateX >= LIMIT_BOTTOM_X) ballTranslateX -= SPEED_BALL;
+            if (ballTranslateX >= LIMIT_FIELD_BOTTOM_X) ballTranslateX -= SPEED_BALL;
 			break;
 		case 's':
-            if (ballTranslateZ <= LIMIT_BOTTOM_Z) ballTranslateZ += SPEED_BALL;
+            if (ballTranslateZ <= LIMIT_FIELD_BOTTOM_Z) ballTranslateZ += SPEED_BALL;
 			break;
 		case 'd':
-            if (ballTranslateX <= LIMIT_TOP_X) ballTranslateX += SPEED_BALL;
+            if (ballTranslateX <= LIMIT_FIELD_TOP_X) ballTranslateX += SPEED_BALL;
 			break;
 		default:
 			break;
 	}
+    checkBallWithinLeftNet();
+    checkBallWithinRightNet();
     glutPostRedisplay();
 }
 
