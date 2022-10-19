@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <GL/glut.h>
 
 // constants
@@ -71,7 +72,7 @@ void drawField() {
 
 void drawBall() {
     glPushMatrix();
-        glColor3f(1, 1, 1);
+        glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
         glutWireSphere(RADIUS_BALL, 20, 20);
     glPopMatrix();
@@ -111,10 +112,71 @@ void drawCrossbars() {
     drawCrossbar(leftCrossbarTopX);
 }
 
+void drawLinePixel(GLdouble x, GLdouble y) {
+	glBegin(GL_POINTS);
+	glVertex3d(y, 0, x);
+	glEnd();
+}
+
+void drawLine(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2) {
+	GLdouble dx = x2 - x1;
+	GLdouble dy = y2 - y1;
+
+	GLdouble d  = 2 * dy - dx;
+	GLdouble incE  = 2 * dy;
+	GLdouble incNE = 2 * (dy - dx);
+
+	GLdouble x = x1;
+	GLdouble y = y1;
+
+    glColor3f(1, 1, 1);
+    glPointSize(4);
+
+	while (x < x2 || y < y2) {
+        if (x == x2) {
+            y += 0.1;
+        } else if (d <= 0) {
+			d += incE;
+			x += 0.1;
+		} else {
+			d += incNE;
+			x += 0.1;
+			y += 0.1;
+		}
+        drawLinePixel(x, y);
+	}
+}
+
+void drawLines() {
+    drawLine(-13.5, -23.5, -13.5, 23.5);
+    drawLine(13.5, -23.5, 13.5, 23.5);
+    drawLine(-13.5, -23.5, 13.4, -23.5);
+    drawLine(-13.5, 23.5, 13.4, 23.5);
+
+    drawLine(-13.5, 0, 13.4, 0);
+
+    drawLine(-7.5, -23.5, -7.5, -14.5);
+    drawLine(7.5, -23.5, 7.5, -14.5);
+    drawLine(-7.5, -14.5, 7.5, -14.5);
+
+    drawLine(-4.5, -23.5, -4.5, -18.5);
+    drawLine(4.5, -23.5, 4.5, -18.5);
+    drawLine(-4.5, -18.5, 4.5, -18.5);
+
+    drawLine(-7.5, 14.5, -7.5, 23.5);
+    drawLine(7.5, 14.5, 7.5, 23.5);
+    drawLine(-7.5, 14.5, 7.5, 14.5);
+
+    drawLine(-4.5, 18.5, -4.5, 23.5);
+    drawLine(4.5, 18.5, 4.5, 23.5);
+    drawLine(-4.5, 18.5, 4.5, 18.5);
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawField();
+    drawLines();
     drawBall();
     drawCrossbars();
 
