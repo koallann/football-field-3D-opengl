@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "color.h": "c"
+        "color.h": "c",
+        "score.h": "c",
+        "bresenham.h": "c",
+        "dimen.h": "c"
     }
 }
