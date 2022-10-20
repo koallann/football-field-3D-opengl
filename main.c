@@ -1,16 +1,7 @@
 #include <stdio.h>
-#include <math.h>
 #include <GL/glut.h>
 
-// constants
-
-GLclampf COLOR_SKY_R = 0.53f,
-        COLOR_SKY_G = 0.8f,
-        COLOR_SKY_B = 0.92f;
-
-GLclampf COLOR_FIELD_R = 0.09f,
-        COLOR_FIELD_G = 0.52f,
-        COLOR_FIELD_B = 0.07f;
+#include "constants/color.h"
 
 GLfloat GROUND_WIDTH = 30.0f,
         GROUND_LENGTH = 50.0f,
