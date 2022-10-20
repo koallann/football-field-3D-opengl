@@ -4,22 +4,23 @@
 #include "constants/color.h"
 #include "constants/dimen.h"
 
-GLdouble SPEED_BALL = 0.25;
-GLdouble SPEED_CAMERA = 0.5;
+GLdouble BALL_SPEED = 0.25;
+GLdouble CAMERA_SPEED = 0.5;
 
 // control variables
 
 GLfloat aspect = 1;
 
-GLdouble obsX = 0,
-        obsY = 30,
-        obsZ = 30;
+GLdouble cameraTranslateX = 0;
+GLdouble cameraTranslateY = 30;
+GLdouble cameraTranslateZ = 30;
 
-GLfloat ballTranslateX = 0,
-        ballTranslateZ = 0;
+GLfloat ballTranslateX = 0;
+GLfloat ballTranslateZ = 0;
 
-int isRotateX;
-GLfloat rotateAngleX, rotateAngleZ;
+int isTranslatingX;
+GLfloat ballRotateX;
+GLfloat ballRotateZ;
 
 int ballWithinLeftNet = 0;
 int goalsAtLeft = 0;
@@ -44,7 +45,7 @@ void drawBall() {
     glPushMatrix();
         glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
-        isRotateX ? glRotatef(rotateAngleX, 0, 0, 1) : glRotatef(rotateAngleZ, 1, 0, 0);
+        isTranslatingX ? glRotatef(ballRotateX, 0, 0, 1) : glRotatef(ballRotateZ, 1, 0, 0);
         glutWireSphere(BALL_RADIUS, 20, 20);
         // glutSolidCube(0.5);
     glPopMatrix();
@@ -492,7 +493,7 @@ void view() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
-        obsX, obsY, obsZ,
+        cameraTranslateX, cameraTranslateY, cameraTranslateZ,
         0, 0, 0,
         0, 1, 0
     );
@@ -543,24 +544,36 @@ void checkGoal() {
 void onKeyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'w':
-            isRotateX = 0;
-            rotateAngleZ -= 10;
-            if (ballTranslateZ >= FIELD_WIDTH_START) ballTranslateZ -= SPEED_BALL;
+            isTranslatingX = 0;
+            ballRotateZ -= 10;
+
+            if (ballTranslateZ >= FIELD_WIDTH_START) {
+                ballTranslateZ -= BALL_SPEED;
+            }
             break;
 		case 'a':
-            isRotateX = 1;
-            rotateAngleX += 10;
-            if (ballTranslateX >= FIELD_LENGTH_START) ballTranslateX -= SPEED_BALL;
+            isTranslatingX = 1;
+            ballRotateX += 10;
+
+            if (ballTranslateX >= FIELD_LENGTH_START) {
+                ballTranslateX -= BALL_SPEED;
+            }
 			break;
 		case 's':
-            isRotateX = 0;
-            rotateAngleZ += 10;
-            if (ballTranslateZ <= FIELD_WIDTH_END) ballTranslateZ += SPEED_BALL;
+            isTranslatingX = 0;
+            ballRotateZ += 10;
+
+            if (ballTranslateZ <= FIELD_WIDTH_END) {
+                ballTranslateZ += BALL_SPEED;
+            }
 			break;
 		case 'd':
-            isRotateX = 1;
-            rotateAngleX -= 10;
-            if (ballTranslateX <= FIELD_LENGTH_END) ballTranslateX += SPEED_BALL;
+            isTranslatingX = 1;
+            ballRotateX -= 10;
+
+            if (ballTranslateX <= FIELD_LENGTH_END) {
+                ballTranslateX += BALL_SPEED;
+            }
 			break;
 		default:
 			break;
@@ -572,29 +585,29 @@ void onKeyPress(unsigned char key, int x, int y) {
 void onSpecialKeyPress(int key, int x, int y) {
     switch (key) {
 		case GLUT_KEY_LEFT:
-            obsX -= SPEED_CAMERA;
+            cameraTranslateX -= CAMERA_SPEED;
 			break;
         case GLUT_KEY_RIGHT:
-			obsX += SPEED_CAMERA;
+			cameraTranslateX += CAMERA_SPEED;
             break;
 		case GLUT_KEY_UP:
-			obsY += SPEED_CAMERA;
+			cameraTranslateY += CAMERA_SPEED;
             break;
 		case GLUT_KEY_DOWN:
-            obsY -= SPEED_CAMERA;
+            cameraTranslateY -= CAMERA_SPEED;
 			break;
         case GLUT_KEY_PAGE_UP:
-            obsZ -= SPEED_CAMERA;
+            cameraTranslateZ -= CAMERA_SPEED;
             break;
         case GLUT_KEY_PAGE_DOWN:
-            obsZ += SPEED_CAMERA;
+            cameraTranslateZ += CAMERA_SPEED;
             break;
 		default:
 			break;
 	}
     glLoadIdentity();
     gluLookAt(
-        obsX, obsY, obsZ,
+        cameraTranslateX, cameraTranslateY, cameraTranslateZ,
         0, 0, 0,
         0, 1, 0
     );
