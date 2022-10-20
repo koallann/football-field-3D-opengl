@@ -22,9 +22,9 @@ int isRotateX;
 GLfloat rotateAngleX, rotateAngleZ;
 
 int ballWithinLeftNet = 0;
-int leftGoals = 0;
+int goalsAtLeft = 0;
 int ballWithinRightNet = 0;
-int rightGoals = 0;
+int goalsAtRight = 0;
 
 // functions
 
@@ -506,29 +506,37 @@ void reshape(int width, int height) {
     view();
 }
 
-void checkBallWithinLeftNet() {
-    if (ballTranslateX >= CROSSBAR_LEFT_NET_WIDTH_START && ballTranslateX <= CROSSBAR_LEFT_NET_WIDTH_END
-        && ballTranslateZ >= CROSSBAR_LEFT_NET_LENGTH_START && ballTranslateZ <= CROSSBAR_LEFT_NET_LENGTH_END) {
-        if (!ballWithinLeftNet && leftGoals < 9) {
-            leftGoals++;
-            lTurnOn(leftGoals);
-        }
-        ballWithinLeftNet = 1;
+void checkBallWithinNet(int isLeft) {
+    GLfloat widthStart = isLeft ? CROSSBAR_LEFT_NET_WIDTH_START : CROSSBAR_RIGHT_NET_WIDTH_START;
+    GLfloat widthEnd = isLeft ? CROSSBAR_LEFT_NET_WIDTH_END : CROSSBAR_RIGHT_NET_WIDTH_END;
+    GLfloat lengthStart = isLeft ? CROSSBAR_LEFT_NET_LENGTH_START : CROSSBAR_RIGHT_NET_LENGTH_START;
+    GLfloat lengthEnd = isLeft ? CROSSBAR_LEFT_NET_LENGTH_END : CROSSBAR_RIGHT_NET_LENGTH_END;
+
+    int* ballWithinNet = isLeft ? &ballWithinLeftNet : &ballWithinRightNet;
+    int* goals = isLeft ? &goalsAtLeft : &goalsAtRight;
+
+    if (ballTranslateX >= widthStart && ballTranslateX <= widthEnd
+        && ballTranslateZ >= lengthStart && ballTranslateZ <= lengthEnd) {
+
+        if (!*ballWithinNet && *goals < 9) *goals += 1;
+        *ballWithinNet = 1;
     } else {
-        ballWithinLeftNet = 0;
+        *ballWithinNet = 0;
     }
 }
 
-void checkBallWithinRightNet() {
-    if (ballTranslateX >= CROSSBAR_RIGHT_NET_WIDTH_START && ballTranslateX <= CROSSBAR_RIGHT_NET_WIDTH_END
-        && ballTranslateZ >= CROSSBAR_RIGHT_NET_LENGTH_START && ballTranslateZ <= CROSSBAR_RIGHT_NET_LENGTH_END) {
-        if (!ballWithinRightNet && rightGoals < 9) {
-            rightGoals++;
-            rTurnOn(rightGoals);
-        }
-        ballWithinRightNet = 1;
-    } else {
-        ballWithinRightNet = 0;
+void checkGoal() {
+    checkBallWithinNet(1);
+    checkBallWithinNet(0);
+
+    if (ballWithinLeftNet || ballWithinRightNet) {
+        printf("%d x %d\n", goalsAtLeft, goalsAtRight);
+
+        if (ballWithinLeftNet) lTurnOn(goalsAtLeft);
+        if (ballWithinRightNet) rTurnOn(goalsAtRight);
+
+        ballTranslateX = 0;
+        ballTranslateZ = 0;
     }
 }
 
@@ -557,14 +565,7 @@ void onKeyPress(unsigned char key, int x, int y) {
 		default:
 			break;
 	}
-    checkBallWithinLeftNet();
-    checkBallWithinRightNet();
-
-    if (ballWithinLeftNet || ballWithinRightNet) {
-        ballTranslateX = 0;
-        ballTranslateZ = 0;
-    }
-
+    checkGoal();
     glutPostRedisplay();
 }
 
