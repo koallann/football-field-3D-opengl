@@ -3,11 +3,7 @@
 
 #include "constants/color.h"
 #include "constants/dimen.h"
-
-GLdouble BALL_SPEED = 0.25;
-GLdouble CAMERA_SPEED = 0.5;
-
-// control variables
+#include "constants/speed.h"
 
 GLfloat aspect = 1;
 
@@ -27,8 +23,6 @@ int goalsAtLeft = 0;
 int ballWithinRightNet = 0;
 int goalsAtRight = 0;
 
-// functions
-
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
 }
@@ -46,8 +40,8 @@ void drawBall() {
         glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
         isTranslatingX ? glRotatef(ballRotateX, 0, 0, 1) : glRotatef(ballRotateZ, 1, 0, 0);
-        glutWireSphere(BALL_RADIUS, 20, 20);
-        // glutSolidCube(0.5);
+        // glutWireSphere(BALL_RADIUS, 20, 20);
+        glutSolidCube(0.5);
     glPopMatrix();
 }
 
@@ -531,8 +525,6 @@ void checkGoal() {
     checkBallWithinNet(0);
 
     if (ballWithinLeftNet || ballWithinRightNet) {
-        printf("%d x %d\n", goalsAtLeft, goalsAtRight);
-
         if (ballWithinLeftNet) lTurnOn(goalsAtLeft);
         if (ballWithinRightNet) rTurnOn(goalsAtRight);
 
