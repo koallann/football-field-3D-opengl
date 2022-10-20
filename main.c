@@ -8,8 +8,8 @@
 GLfloat aspect = 1;
 
 GLdouble cameraTranslateX = 0;
-GLdouble cameraTranslateY = 30;
-GLdouble cameraTranslateZ = 30;
+GLdouble cameraTranslateY = 25;
+GLdouble cameraTranslateZ = 35;
 
 GLfloat ballTranslateX = 0;
 GLfloat ballTranslateZ = 0;
@@ -45,38 +45,41 @@ void drawBall() {
     glPopMatrix();
 }
 
-void drawCrossbar(GLfloat crossbarTopX) {
-    GLfloat crossbarSideY = CROSSBAR_HEIGHT / 2;
-    GLfloat crossbarRightZ = CROSSBAR_LENGTH / 2;
-    GLfloat crossbarLeftZ = -1 * crossbarRightZ;
+void drawCrossbar(GLfloat translateX) {
+    GLfloat translateY = CROSSBAR_HEIGHT / 2;
+    GLfloat start = -(CROSSBAR_LENGTH / 2);
+    GLfloat end = -start;
 
     glColor3f(1, 1, 1);
 
+    // top bar
     glPushMatrix();
-        glTranslatef(crossbarTopX, CROSSBAR_HEIGHT, 0);
-        glScalef(0.1, 0.1, 5);
-        glutSolidCube(1.0f);
+        glTranslatef(translateX, CROSSBAR_HEIGHT, 0);
+        glScalef(0.1, 0.1, CROSSBAR_LENGTH);
+        glutSolidCube(1);
     glPopMatrix();
 
+    // left bar
     glPushMatrix();
-        glTranslatef(crossbarTopX, crossbarSideY, crossbarLeftZ);
+        glTranslatef(translateX, translateY, start);
         glScalef(0.1, CROSSBAR_HEIGHT, 0.1);
-        glutSolidCube(1.0f);
+        glutSolidCube(1);
     glPopMatrix();
 
+    // right bar
     glPushMatrix();
-        glTranslatef(crossbarTopX, crossbarSideY, crossbarRightZ);
+        glTranslatef(translateX, translateY, end);
         glScalef(0.1, CROSSBAR_HEIGHT, 0.1);
-        glutSolidCube(1.0f);
+        glutSolidCube(1);
     glPopMatrix();
 }
 
 void drawCrossbars() {
-    GLfloat rightCrossbarTopX = (GROUND_LENGTH / 2) - (GROUND_LENGTH - FIELD_LENGTH) / 2;
-    GLfloat leftCrossbarTopX = -(GROUND_LENGTH / 2) + (GROUND_LENGTH - FIELD_LENGTH) / 2;
+    GLfloat leftTranslateX = -(FIELD_LENGTH / 2) + 0.5;
+    GLfloat rightTranslateX = -leftTranslateX;
 
-    drawCrossbar(rightCrossbarTopX);
-    drawCrossbar(leftCrossbarTopX);
+    drawCrossbar(leftTranslateX);
+    drawCrossbar(rightTranslateX);
 }
 
 void drawLinePixel(GLdouble x, GLdouble y) {
@@ -539,7 +542,7 @@ void onKeyPress(unsigned char key, int x, int y) {
             isTranslatingX = 0;
             ballRotateZ -= 10;
 
-            if (ballTranslateZ >= FIELD_WIDTH_START) {
+            if (ballTranslateZ >= GROUND_WIDTH_START) {
                 ballTranslateZ -= BALL_SPEED;
             }
             break;
@@ -547,7 +550,7 @@ void onKeyPress(unsigned char key, int x, int y) {
             isTranslatingX = 1;
             ballRotateX += 10;
 
-            if (ballTranslateX >= FIELD_LENGTH_START) {
+            if (ballTranslateX >= GROUND_LENGTH_START) {
                 ballTranslateX -= BALL_SPEED;
             }
 			break;
@@ -555,7 +558,7 @@ void onKeyPress(unsigned char key, int x, int y) {
             isTranslatingX = 0;
             ballRotateZ += 10;
 
-            if (ballTranslateZ <= FIELD_WIDTH_END) {
+            if (ballTranslateZ <= GROUND_WIDTH_END) {
                 ballTranslateZ += BALL_SPEED;
             }
 			break;
@@ -563,7 +566,7 @@ void onKeyPress(unsigned char key, int x, int y) {
             isTranslatingX = 1;
             ballRotateX -= 10;
 
-            if (ballTranslateX <= FIELD_LENGTH_END) {
+            if (ballTranslateX <= GROUND_LENGTH_END) {
                 ballTranslateX += BALL_SPEED;
             }
 			break;
