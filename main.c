@@ -2,18 +2,7 @@
 #include <GL/glut.h>
 
 #include "constants/color.h"
-
-GLfloat GROUND_WIDTH = 30.0f,
-        GROUND_LENGTH = 50.0f,
-        GROUND_HEIGHT = 0.25f;
-
-GLfloat FIELD_WIDTH = 25.0f,
-        FIELD_LENGTH = 45.0f;
-
-GLfloat CROSSBAR_LENGTH = 5.0f,
-        CROSSBAR_HEIGHT = 2.2f;
-
-GLdouble RADIUS_BALL = 0.25;
+#include "constants/dimen.h"
 
 GLdouble SPEED_BALL = 0.25;
 GLdouble SPEED_CAMERA = 0.5;
@@ -30,16 +19,7 @@ GLfloat ballTranslateX = 0,
         ballTranslateZ = 0;
 
 int isRotateX;
-
 GLfloat rotateAngleX, rotateAngleZ;
-
-GLdouble LIMIT_FIELD_TOP_X;
-GLdouble LIMIT_FIELD_BOTTOM_X;
-GLdouble LIMIT_FIELD_TOP_Z;
-GLdouble LIMIT_FIELD_BOTTOM_Z;
-
-GLdouble LIMIT_GROUND_BOTTOM_X;
-GLdouble LIMIT_GROUND_TOP_X;
 
 int ballWithinLeftNet = 0;
 int leftGoals = 0;
@@ -50,11 +30,6 @@ int rightGoals = 0;
 
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
-
-    LIMIT_FIELD_TOP_X = (GROUND_LENGTH / 2);
-    LIMIT_FIELD_BOTTOM_X = -1 * (GROUND_LENGTH / 2);
-    LIMIT_FIELD_TOP_Z = -1 * (GROUND_WIDTH / 2);
-    LIMIT_FIELD_BOTTOM_Z = (GROUND_WIDTH / 2);
 }
 
 void drawField() {
@@ -70,7 +45,7 @@ void drawBall() {
         glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
         isRotateX ? glRotatef(rotateAngleX, 0, 0, 1) : glRotatef(rotateAngleZ, 1, 0, 0);
-        glutWireSphere(RADIUS_BALL, 20, 20);
+        glutWireSphere(BALL_RADIUS, 20, 20);
         // glutSolidCube(0.5);
     glPopMatrix();
 }
@@ -292,13 +267,6 @@ void lTurnOn(int value) {
 }
 
 void drawLeftScore() {
-    glPushMatrix();
-        glColor3f(0, 0, 0);
-        glTranslatef(0, 4, -15);
-        glScalef(15, 8, 0.1);
-        glutSolidCube(1.0);
-    glPopMatrix();
-
     // vertical lines
     
     glPushMatrix();
@@ -500,6 +468,14 @@ void display() {
     drawField();
     drawLines();
     drawCircle(0, 0, 7.0);
+
+    glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(0, 4, -15);
+        glScalef(15, 8, 0.1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
     drawLeftScore();
     drawRightScore();
     drawBall();
@@ -531,13 +507,8 @@ void reshape(int width, int height) {
 }
 
 void checkBallWithinLeftNet() {
-    GLdouble netStartLimitX = -1 * (GROUND_LENGTH / 2);
-    GLdouble netEndLimitX = netStartLimitX + (GROUND_LENGTH - FIELD_LENGTH) / 2 - 0.5;
-    GLdouble netStartLimitZ = -1 * (CROSSBAR_LENGTH / 2);
-    GLdouble netEndLimitZ = CROSSBAR_LENGTH / 2;
-    
-    if (ballTranslateX >= netStartLimitX && ballTranslateX <= netEndLimitX
-        && ballTranslateZ >= netStartLimitZ && ballTranslateZ <= netEndLimitZ) {
+    if (ballTranslateX >= CROSSBAR_LEFT_NET_WIDTH_START && ballTranslateX <= CROSSBAR_LEFT_NET_WIDTH_END
+        && ballTranslateZ >= CROSSBAR_LEFT_NET_LENGTH_START && ballTranslateZ <= CROSSBAR_LEFT_NET_LENGTH_END) {
         if (!ballWithinLeftNet && leftGoals < 9) {
             leftGoals++;
             lTurnOn(leftGoals);
@@ -549,13 +520,8 @@ void checkBallWithinLeftNet() {
 }
 
 void checkBallWithinRightNet() {
-    GLdouble netStartLimitX = (GROUND_LENGTH / 2) - (GROUND_LENGTH - FIELD_LENGTH) / 2 + 0.5;
-    GLdouble netEndLimitX = GROUND_LENGTH / 2;
-    GLdouble netStartLimitZ = -1 * (CROSSBAR_LENGTH / 2);
-    GLdouble netEndLimitZ = CROSSBAR_LENGTH / 2;
-    
-    if (ballTranslateX >= netStartLimitX && ballTranslateX <= netEndLimitX
-        && ballTranslateZ >= netStartLimitZ && ballTranslateZ <= netEndLimitZ) {
+    if (ballTranslateX >= CROSSBAR_RIGHT_NET_WIDTH_START && ballTranslateX <= CROSSBAR_RIGHT_NET_WIDTH_END
+        && ballTranslateZ >= CROSSBAR_RIGHT_NET_LENGTH_START && ballTranslateZ <= CROSSBAR_RIGHT_NET_LENGTH_END) {
         if (!ballWithinRightNet && rightGoals < 9) {
             rightGoals++;
             rTurnOn(rightGoals);
@@ -571,22 +537,22 @@ void onKeyPress(unsigned char key, int x, int y) {
 		case 'w':
             isRotateX = 0;
             rotateAngleZ -= 10;
-            if (ballTranslateZ >= LIMIT_FIELD_TOP_Z) ballTranslateZ -= SPEED_BALL;
+            if (ballTranslateZ >= FIELD_WIDTH_START) ballTranslateZ -= SPEED_BALL;
             break;
 		case 'a':
             isRotateX = 1;
             rotateAngleX += 10;
-            if (ballTranslateX >= LIMIT_FIELD_BOTTOM_X) ballTranslateX -= SPEED_BALL;
+            if (ballTranslateX >= FIELD_LENGTH_START) ballTranslateX -= SPEED_BALL;
 			break;
 		case 's':
             isRotateX = 0;
             rotateAngleZ += 10;
-            if (ballTranslateZ <= LIMIT_FIELD_BOTTOM_Z) ballTranslateZ += SPEED_BALL;
+            if (ballTranslateZ <= FIELD_WIDTH_END) ballTranslateZ += SPEED_BALL;
 			break;
 		case 'd':
             isRotateX = 1;
             rotateAngleX -= 10;
-            if (ballTranslateX <= LIMIT_FIELD_TOP_X) ballTranslateX += SPEED_BALL;
+            if (ballTranslateX <= FIELD_LENGTH_END) ballTranslateX += SPEED_BALL;
 			break;
 		default:
 			break;
