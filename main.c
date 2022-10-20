@@ -29,11 +29,127 @@ int goalsAtRight = 0;
 ScoreDigit* leftScoreDigit;
 ScoreDigit* rightScoreDigit;
 
+void drawField();
+void drawLines();
+void drawScore();
+void drawBall();
+void drawCrossbars();
+void checkGoal();
+
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
 
     leftScoreDigit = malloc(sizeof(ScoreDigit));
     rightScoreDigit = malloc(sizeof(ScoreDigit));
+}
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    drawField();
+    drawLines();
+    drawCircle(0, 0, 7.0);
+
+    drawScore();
+    drawBall();
+    drawCrossbars();
+
+    glFlush();
+}
+
+void view() {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45, aspect, 0.5, 100);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(
+        cameraTranslateX, cameraTranslateY, cameraTranslateZ,
+        0, 0, 0,
+        0, 1, 0
+    );
+}
+
+void reshape(int width, int height) {
+    if (height == 0) return;
+
+    glViewport(0, 0, width, height);
+    aspect = (GLfloat) width / (GLfloat) height;
+    view();
+}
+
+void onKeyPress(unsigned char key, int x, int y) {
+	switch (key) {
+		case 'w':
+            isTranslatingX = 0;
+            ballRotateZ -= 10;
+
+            if (ballTranslateZ >= GROUND_WIDTH_START) {
+                ballTranslateZ -= BALL_SPEED;
+            }
+            break;
+		case 'a':
+            isTranslatingX = 1;
+            ballRotateX += 10;
+
+            if (ballTranslateX >= GROUND_LENGTH_START) {
+                ballTranslateX -= BALL_SPEED;
+            }
+			break;
+		case 's':
+            isTranslatingX = 0;
+            ballRotateZ += 10;
+
+            if (ballTranslateZ <= GROUND_WIDTH_END) {
+                ballTranslateZ += BALL_SPEED;
+            }
+			break;
+		case 'd':
+            isTranslatingX = 1;
+            ballRotateX -= 10;
+
+            if (ballTranslateX <= GROUND_LENGTH_END) {
+                ballTranslateX += BALL_SPEED;
+            }
+			break;
+		default:
+			break;
+	}
+    checkGoal();
+    glutPostRedisplay();
+}
+
+void onSpecialKeyPress(int key, int x, int y) {
+    switch (key) {
+		case GLUT_KEY_LEFT:
+            cameraTranslateX -= CAMERA_SPEED;
+			break;
+        case GLUT_KEY_RIGHT:
+			cameraTranslateX += CAMERA_SPEED;
+            break;
+		case GLUT_KEY_UP:
+			cameraTranslateY += CAMERA_SPEED;
+            break;
+		case GLUT_KEY_DOWN:
+            cameraTranslateY -= CAMERA_SPEED;
+			break;
+        case GLUT_KEY_PAGE_UP:
+            cameraTranslateZ -= CAMERA_SPEED;
+            break;
+        case GLUT_KEY_PAGE_DOWN:
+            cameraTranslateZ += CAMERA_SPEED;
+            break;
+		default:
+			break;
+	}
+    glLoadIdentity();
+    gluLookAt(
+        cameraTranslateX, cameraTranslateY, cameraTranslateZ,
+        0, 0, 0,
+        0, 1, 0
+    );
+    glutPostRedisplay();
 }
 
 void drawField() {
@@ -132,42 +248,6 @@ void drawScore() {
     drawScoreDigit(rightScoreDigit, 2);
 }
 
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    drawField();
-    drawLines();
-    drawCircle(0, 0, 7.0);
-
-    drawScore();
-    drawBall();
-    drawCrossbars();
-
-    glFlush();
-}
-
-void view() {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45, aspect, 0.5, 100);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(
-        cameraTranslateX, cameraTranslateY, cameraTranslateZ,
-        0, 0, 0,
-        0, 1, 0
-    );
-}
-
-void reshape(int width, int height) {
-    if (height == 0) return;
-
-    glViewport(0, 0, width, height);
-    aspect = (GLfloat) width / (GLfloat) height;
-    view();
-}
-
 void checkBallWithinNet(int isLeft) {
     GLfloat widthStart = isLeft ? CROSSBAR_LEFT_NET_WIDTH_START : CROSSBAR_RIGHT_NET_WIDTH_START;
     GLfloat widthEnd = isLeft ? CROSSBAR_LEFT_NET_WIDTH_END : CROSSBAR_RIGHT_NET_WIDTH_END;
@@ -198,79 +278,6 @@ void checkGoal() {
         ballTranslateX = 0;
         ballTranslateZ = 0;
     }
-}
-
-void onKeyPress(unsigned char key, int x, int y) {
-	switch (key) {
-		case 'w':
-            isTranslatingX = 0;
-            ballRotateZ -= 10;
-
-            if (ballTranslateZ >= GROUND_WIDTH_START) {
-                ballTranslateZ -= BALL_SPEED;
-            }
-            break;
-		case 'a':
-            isTranslatingX = 1;
-            ballRotateX += 10;
-
-            if (ballTranslateX >= GROUND_LENGTH_START) {
-                ballTranslateX -= BALL_SPEED;
-            }
-			break;
-		case 's':
-            isTranslatingX = 0;
-            ballRotateZ += 10;
-
-            if (ballTranslateZ <= GROUND_WIDTH_END) {
-                ballTranslateZ += BALL_SPEED;
-            }
-			break;
-		case 'd':
-            isTranslatingX = 1;
-            ballRotateX -= 10;
-
-            if (ballTranslateX <= GROUND_LENGTH_END) {
-                ballTranslateX += BALL_SPEED;
-            }
-			break;
-		default:
-			break;
-	}
-    checkGoal();
-    glutPostRedisplay();
-}
-
-void onSpecialKeyPress(int key, int x, int y) {
-    switch (key) {
-		case GLUT_KEY_LEFT:
-            cameraTranslateX -= CAMERA_SPEED;
-			break;
-        case GLUT_KEY_RIGHT:
-			cameraTranslateX += CAMERA_SPEED;
-            break;
-		case GLUT_KEY_UP:
-			cameraTranslateY += CAMERA_SPEED;
-            break;
-		case GLUT_KEY_DOWN:
-            cameraTranslateY -= CAMERA_SPEED;
-			break;
-        case GLUT_KEY_PAGE_UP:
-            cameraTranslateZ -= CAMERA_SPEED;
-            break;
-        case GLUT_KEY_PAGE_DOWN:
-            cameraTranslateZ += CAMERA_SPEED;
-            break;
-		default:
-			break;
-	}
-    glLoadIdentity();
-    gluLookAt(
-        cameraTranslateX, cameraTranslateY, cameraTranslateZ,
-        0, 0, 0,
-        0, 1, 0
-    );
-    glutPostRedisplay();
 }
 
 int main(int argc, char **argv)
