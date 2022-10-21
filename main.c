@@ -80,8 +80,8 @@ void reshape(int width, int height) {
 }
 
 void onKeyPress(unsigned char key, int x, int y) {
-	switch (key) {
-		case 'w':
+    switch (key) {
+        case 'w':
             isTranslatingX = 0;
             ballRotateZ -= 10;
 
@@ -89,60 +89,60 @@ void onKeyPress(unsigned char key, int x, int y) {
                 ballTranslateZ -= BALL_SPEED;
             }
             break;
-		case 'a':
+        case 'a':
             isTranslatingX = 1;
             ballRotateX += 10;
 
             if (ballTranslateX >= GROUND_LENGTH_START) {
                 ballTranslateX -= BALL_SPEED;
             }
-			break;
-		case 's':
+            break;
+        case 's':
             isTranslatingX = 0;
             ballRotateZ += 10;
 
             if (ballTranslateZ <= GROUND_WIDTH_END) {
                 ballTranslateZ += BALL_SPEED;
             }
-			break;
-		case 'd':
+            break;
+        case 'd':
             isTranslatingX = 1;
             ballRotateX -= 10;
 
             if (ballTranslateX <= GROUND_LENGTH_END) {
                 ballTranslateX += BALL_SPEED;
             }
-			break;
-		default:
-			break;
-	}
+            break;
+        default:
+            break;
+    }
     checkGoal();
     glutPostRedisplay();
 }
 
 void onSpecialKeyPress(int key, int x, int y) {
     switch (key) {
-		case GLUT_KEY_LEFT:
+        case GLUT_KEY_LEFT:
             cameraTranslateX -= CAMERA_SPEED;
-			break;
+            break;
         case GLUT_KEY_RIGHT:
-			cameraTranslateX += CAMERA_SPEED;
+            cameraTranslateX += CAMERA_SPEED;
             break;
-		case GLUT_KEY_UP:
-			cameraTranslateY += CAMERA_SPEED;
+        case GLUT_KEY_UP:
+            cameraTranslateY += CAMERA_SPEED;
             break;
-		case GLUT_KEY_DOWN:
+        case GLUT_KEY_DOWN:
             cameraTranslateY -= CAMERA_SPEED;
-			break;
+            break;
         case GLUT_KEY_PAGE_UP:
             cameraTranslateZ -= CAMERA_SPEED;
             break;
         case GLUT_KEY_PAGE_DOWN:
             cameraTranslateZ += CAMERA_SPEED;
             break;
-		default:
-			break;
-	}
+        default:
+            break;
+    }
     glLoadIdentity();
     gluLookAt(
         cameraTranslateX, cameraTranslateY, cameraTranslateZ,
