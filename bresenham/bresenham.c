@@ -1,5 +1,7 @@
 #include <GL/glut.h>
 
+#define DRAW_SMOOTH_FACTOR 0.01f
+
 void drawLinePoint(GLdouble x, GLdouble y);
 void drawCirclePoints(GLdouble xc, GLdouble yc, GLdouble x, GLdouble y);
 
@@ -19,14 +21,14 @@ void drawLine(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2) {
 
     while (x < x2 || y < y2) {
         if (x == x2) {
-            y += 0.1;
+            y += DRAW_SMOOTH_FACTOR;
         } else if (d <= 0) {
             d += incE;
-            x += 0.1;
+            x += DRAW_SMOOTH_FACTOR;
         } else {
             d += incNE;
-            x += 0.1;
-            y += 0.1;
+            x += DRAW_SMOOTH_FACTOR;
+            y += DRAW_SMOOTH_FACTOR;
         }
         drawLinePoint(x, y);
     }
@@ -45,11 +47,11 @@ void drawFieldCircle(GLdouble xc, GLdouble yc, GLdouble r) {
     while (y > x) {
         if (d < 0) {
             d += 2 * x;
-            x += 0.1;
+            x += DRAW_SMOOTH_FACTOR;
         } else {
             d += 2 * (x-y) + 1;
-            x += 0.1;
-            y -= 0.1;
+            x += DRAW_SMOOTH_FACTOR;
+            y -= DRAW_SMOOTH_FACTOR;
         }
         drawCirclePoints(xc, yc, x, y);
     }
