@@ -30,7 +30,7 @@ ScoreDigit* leftScoreDigit;
 ScoreDigit* rightScoreDigit;
 
 void drawField();
-void drawLines();
+void drawFieldLines();
 void drawScore();
 void drawBall();
 void drawCrossbars();
@@ -47,8 +47,8 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawField();
-    drawLines();
-    drawCircle(0, 0, 7.0);
+    drawFieldLines();
+    drawFieldCircle(0, 0, 7.0);
 
     drawScore();
     drawBall();
@@ -165,8 +165,7 @@ void drawBall() {
         glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
         isTranslatingX ? glRotatef(ballRotateX, 0, 0, 1) : glRotatef(ballRotateZ, 1, 0, 0);
-        // glutWireSphere(BALL_RADIUS, 20, 20);
-        glutSolidCube(0.5);
+        glutWireSphere(BALL_RADIUS, 20, 20);
     glPopMatrix();
 }
 
@@ -207,7 +206,7 @@ void drawCrossbars() {
     drawCrossbar(rightTranslateX);
 }
 
-void drawLines() {
+void drawFieldLines() {
     drawLine(-13.5, -23.5, -13.5, 23.5);
     drawLine(13.5, -23.5, 13.5, 23.5);
     drawLine(-13.5, -23.5, 13.4, -23.5);
@@ -233,19 +232,21 @@ void drawLines() {
 }
 
 void drawScore() {
+    GLfloat translateZ = -(FIELD_WIDTH / 2) - 2.5f;
+
     // pane
     glPushMatrix();
         glColor3f(0, 0, 0);
-        glTranslatef(0, 4, -(GROUND_WIDTH / 2));
+        glTranslatef(0, 4, translateZ);
         glScalef(15, 8, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     setScoreDigit(leftScoreDigit, goalsAtLeft);
-    drawScoreDigit(leftScoreDigit, -4);
+    drawScoreDigit(leftScoreDigit, -4, translateZ);
 
     setScoreDigit(rightScoreDigit, goalsAtRight);
-    drawScoreDigit(rightScoreDigit, 2);
+    drawScoreDigit(rightScoreDigit, 2, translateZ);
 }
 
 void checkBallWithinNet(int isLeft) {

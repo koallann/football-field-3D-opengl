@@ -1,11 +1,11 @@
 #include <GL/glut.h>
 
-const GLfloat GROUND_WIDTH = 30.0f;
-const GLfloat GROUND_LENGTH = 50.0f;
+const GLfloat GROUND_WIDTH = 60.0f;
+const GLfloat GROUND_LENGTH = 70.0f;
 const GLfloat GROUND_HEIGHT = 0.25f;
 
-const GLfloat FIELD_WIDTH = GROUND_WIDTH - 5.0f;
-const GLfloat FIELD_LENGTH = GROUND_LENGTH - 5.0f;
+const GLfloat FIELD_WIDTH = GROUND_WIDTH - 35.0f;
+const GLfloat FIELD_LENGTH = GROUND_LENGTH - 25.0f;
 
 const GLdouble GROUND_WIDTH_START = -(GROUND_WIDTH / 2);
 const GLdouble GROUND_WIDTH_END = -GROUND_WIDTH_START;

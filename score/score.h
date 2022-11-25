@@ -8,7 +8,7 @@ typedef struct {
     int h1, h2, h3;
 } ScoreDigit;
 
-void drawScoreDigit(ScoreDigit* digit, GLfloat translateX);
+void drawScoreDigit(ScoreDigit* digit, GLfloat translateX, GLfloat translateZ);
 
 void setScoreDigit(ScoreDigit* digit, int value);
 

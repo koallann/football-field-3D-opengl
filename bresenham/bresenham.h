@@ -5,6 +5,6 @@
 
 void drawLine(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2);
 
-void drawCircle(GLdouble xc, GLdouble yc, GLdouble r);
+void drawFieldCircle(GLdouble xc, GLdouble yc, GLdouble r);
 
 #endif
