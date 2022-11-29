@@ -27,6 +27,8 @@ int isTranslatingX;
 GLfloat ballRotateX;
 GLfloat ballRotateZ;
 
+GLuint groundTexId;
+
 int ballWithinLeftNet = 0;
 int goalsAtLeft = 0;
 int ballWithinRightNet = 0;
@@ -35,6 +37,7 @@ int goalsAtRight = 0;
 ScoreDigit* leftScoreDigit;
 ScoreDigit* rightScoreDigit;
 
+void load2DTexture(GLuint id, char* filePath);
 void drawField();
 void drawFieldLines();
 void drawScore();
@@ -42,28 +45,6 @@ void drawBall();
 void drawCrossbars();
 void drawGrandStand();
 void checkGoal();
-
-GLuint groundTexId;
-
-void load2DTexture(GLuint id, char* filePath) {
-    int width, height, channels = 0;
-    unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
-
-    glBindTexture(GL_TEXTURE_2D, id);
-
-    glTexImage2D(
-        GL_TEXTURE_2D, 0, GL_RGB,
-        width, height, 0,
-        GL_RGB, GL_UNSIGNED_BYTE, data
-    );
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
 
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
@@ -112,6 +93,26 @@ void reshape(int width, int height) {
     glViewport(0, 0, width, height);
     aspect = (GLfloat) width / (GLfloat) height;
     view();
+}
+
+void load2DTexture(GLuint id, char* filePath) {
+    int width, height, channels = 0;
+    unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
+
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGB,
+        width, height, 0,
+        GL_RGB, GL_UNSIGNED_BYTE, data
+    );
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void onKeyPress(unsigned char key, int x, int y) {
