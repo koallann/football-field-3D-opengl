@@ -5,6 +5,7 @@
 #include "constants/color.h"
 #include "constants/dimen.h"
 #include "constants/speed.h"
+#include "constants/light.h"
 #include "bresenham/bresenham.h"
 #include "score/score.h"
 
@@ -16,7 +17,7 @@
 
 GLfloat aspect = 1;
 
-GLdouble cameraTranslateX = 0;
+GLdouble cameraTranslateX = -25;
 GLdouble cameraTranslateY = 25;
 GLdouble cameraTranslateZ = 35;
 
@@ -37,7 +38,13 @@ int goalsAtRight = 0;
 ScoreDigit* leftScoreDigit;
 ScoreDigit* rightScoreDigit;
 
+int isDay = 1;
+
+void lighting();
+void setLight();
+
 void load2DTexture(GLuint id, char* filePath);
+
 void drawField();
 void drawFieldLines();
 void drawScore();
@@ -54,8 +61,27 @@ void init() {
     glGenTextures(1, &groundTexId);
     load2DTexture(groundTexId, "assets/texture_field.jpg");
 
+    lighting();
+
     leftScoreDigit = malloc(sizeof(ScoreDigit));
     rightScoreDigit = malloc(sizeof(ScoreDigit));
+}
+
+void lighting() {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, INTENSITY_AMBIENT_LIGHT);
+    setLight(isDay ? LIGHT_DAY : LIGHT_NIGHT);
+}
+
+void setLight(const GLfloat light[4][4]) {
+    glLightfv(GL_LIGHT0, GL_POSITION, light[0]);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light[1]);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light[2]);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light[3]);
 }
 
 void display() {
@@ -149,6 +175,10 @@ void onKeyPress(unsigned char key, int x, int y) {
                 ballTranslateX += BALL_SPEED;
             }
             break;
+        case 'l':
+            isDay = !isDay;
+            setLight(isDay ? LIGHT_DAY : LIGHT_NIGHT);
+            break;
         default:
             break;
     }
@@ -207,7 +237,7 @@ void drawBall() {
         glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
         isTranslatingX ? glRotatef(ballRotateX, 0, 0, 1) : glRotatef(ballRotateZ, 1, 0, 0);
-        glutWireSphere(BALL_RADIUS, 20, 20);
+        glutSolidSphere(BALL_RADIUS, 20, 20);
     glPopMatrix();
 }
 
