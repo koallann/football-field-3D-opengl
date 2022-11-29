@@ -28,7 +28,7 @@ int isTranslatingX;
 GLfloat ballRotateX;
 GLfloat ballRotateZ;
 
-GLuint groundTexId;
+GLuint texId[2];
 
 int ballWithinLeftNet = 0;
 int goalsAtLeft = 0;
@@ -60,9 +60,11 @@ void init() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
-    glGenTextures(1, &groundTexId);
-    load2DTexture(groundTexId, "assets/texture_field.jpg");
+    glGenTextures(2, texId);
+    load2DTexture(texId[0], "assets/texture_field.jpg");
+    load2DTexture(texId[1], "assets/texture_grandstand.jpg");
 
+    glShadeModel(GL_SMOOTH);
     lighting();
 
     leftScoreDigit = malloc(sizeof(ScoreDigit));
@@ -223,7 +225,7 @@ void onSpecialKeyPress(int key, int x, int y) {
 
 void drawField() {
     glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, groundTexId);
+        glBindTexture(GL_TEXTURE_2D, texId[0]);
         glBegin(GL_QUADS);
         glColor3f(COLOR_FIELD_R, COLOR_FIELD_G, COLOR_FIELD_B);
         glTexCoord2f(0.0, 0.0); glVertex3f(-(GROUND_LENGTH/2), 0, -(GROUND_WIDTH/2));
@@ -325,11 +327,15 @@ void drawScore() {
 }
 
 void drawGrandStand() {
+    glBindTexture(GL_TEXTURE_2D, texId[1]);
+
     SimpleObj_t* topGrandStand = loadObj("assets/grandstand_top.obj");
     SimpleObj_t* bottomGrandStand = loadObj("assets/grandstand_bottom.obj");
 
     drawObj(topGrandStand);
     drawObj(bottomGrandStand);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void drawSpotlight(GLfloat x, GLfloat z, GLfloat yInclination) {
@@ -349,7 +355,7 @@ void drawSpotlight(GLfloat x, GLfloat z, GLfloat yInclination) {
     glPopMatrix();
 
     glPushMatrix();
-        glColor3f(1, 1, 1);
+        isDay ? glColor3f(0, 0, 0) : glColor3f(1, 1, 1);
         glTranslatef(x, 7, z);
         glRotatef(yInclination, 0, 1, 0);
         glScalef(1.25, 1.25, 0.0);
