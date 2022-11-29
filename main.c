@@ -8,6 +8,9 @@
 #include "bresenham/bresenham.h"
 #include "score/score.h"
 
+#define SIMPLE_OBJ_IMP
+#include "lib/obj_loader/obj_loader.h"
+
 GLfloat aspect = 1;
 
 GLdouble cameraTranslateX = 0;
