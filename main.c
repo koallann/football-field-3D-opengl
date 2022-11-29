@@ -37,6 +37,7 @@ void drawFieldLines();
 void drawScore();
 void drawBall();
 void drawCrossbars();
+void drawGrandStand();
 void checkGoal();
 
 void init() {
@@ -53,9 +54,10 @@ void display() {
     drawFieldLines();
     drawFieldCircle(0, 0, 7.0);
 
-    drawScore();
+    // drawScore();
     drawBall();
     drawCrossbars();
+    drawGrandStand();
 
     glFlush();
 }
@@ -250,6 +252,14 @@ void drawScore() {
 
     setScoreDigit(rightScoreDigit, goalsAtRight);
     drawScoreDigit(rightScoreDigit, 2, translateZ);
+}
+
+void drawGrandStand() {
+    SimpleObj_t* topGrandStand = loadObj("assets/grandstand_top.obj");
+    SimpleObj_t* bottomGrandStand = loadObj("assets/grandstand_bottom.obj");
+
+    drawObj(topGrandStand);
+    drawObj(bottomGrandStand);
 }
 
 void checkBallWithinNet(int isLeft) {
