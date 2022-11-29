@@ -111,7 +111,7 @@ void display() {
     drawFieldLines();
     drawFieldCircle(0, 0, 7.0);
 
-    // drawScore();
+    drawScore();
     drawBall();
     drawCrossbars();
     drawGrandStand();
@@ -243,6 +243,7 @@ void drawField() {
         glBindTexture(GL_TEXTURE_2D, texId[0]);
         glBegin(GL_QUADS);
         glColor3f(COLOR_FIELD_R, COLOR_FIELD_G, COLOR_FIELD_B);
+        glNormal3i(0, 1, 0);
         glTexCoord2f(0.0, 0.0); glVertex3f(-(GROUND_LENGTH/2), 0, -(GROUND_WIDTH/2));
         glTexCoord2f(0.0, 1.0); glVertex3f((GROUND_LENGTH/2), 0, -(GROUND_WIDTH/2));
         glTexCoord2f(1.0, 1.0); glVertex3f((GROUND_LENGTH/2), 0, (GROUND_WIDTH/2));
@@ -254,9 +255,15 @@ void drawField() {
 
 void drawBall() {
     glPushMatrix();
+        float specular[4] = {1, 1, 1, 1};
+        float ns = 64;
+
         glColor3f(1, 0.55, 0);
         glTranslatef(ballTranslateX, 0.35f, ballTranslateZ);
         isTranslatingX ? glRotatef(ballRotateX, 0, 0, 1) : glRotatef(ballRotateZ, 1, 0, 0);
+
+        glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+        glMaterialf(GL_FRONT, GL_SHININESS, ns);
         glutSolidSphere(BALL_RADIUS, 20, 20);
     glPopMatrix();
 }
@@ -324,21 +331,21 @@ void drawFieldLines() {
 }
 
 void drawScore() {
-    GLfloat translateZ = -(FIELD_WIDTH / 2) - 2.5f;
+    GLfloat translateZ = -(GROUND_WIDTH/2);
 
     // pane
     glPushMatrix();
         glColor3f(0, 0, 0);
-        glTranslatef(0, 4, translateZ);
+        glTranslatef(0, 8, translateZ);
         glScalef(15, 8, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     setScoreDigit(leftScoreDigit, goalsAtLeft);
-    drawScoreDigit(leftScoreDigit, -4, translateZ);
+    drawScoreDigit(leftScoreDigit, -4, 4, translateZ);
 
     setScoreDigit(rightScoreDigit, goalsAtRight);
-    drawScoreDigit(rightScoreDigit, 2, translateZ);
+    drawScoreDigit(rightScoreDigit, 2, 4, translateZ);
 }
 
 void drawGrandStand() {

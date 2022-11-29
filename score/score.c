@@ -14,33 +14,33 @@ void turnSeven(ScoreDigit* digit);
 void turnEight(ScoreDigit* digit);
 void turnNine(ScoreDigit* digit);
 
-void drawScoreDigit(ScoreDigit* digit, GLfloat translateX, GLfloat translateZ) {
+void drawScoreDigit(ScoreDigit* digit, GLfloat translateX, GLfloat translateY, GLfloat translateZ) {
     // vertical dashes
 
     glPushMatrix();
         digit->v1 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX + 2, 5, translateZ);
+        glTranslatef(translateX + 2, 5 + translateY, translateZ);
         glScalef(0.2, 1.5, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     glPushMatrix();
         digit->v2 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX + 2, 3, translateZ);
+        glTranslatef(translateX + 2, 3 + translateY, translateZ);
         glScalef(0.2, 1.5, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     glPushMatrix();
         digit->v3 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX, 3, translateZ);
+        glTranslatef(translateX, 3 + translateY, translateZ);
         glScalef(0.2, 1.5, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     glPushMatrix();
         digit->v4 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX, 5, translateZ);
+        glTranslatef(translateX, 5 + translateY, translateZ);
         glScalef(0.2, 1.5, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
@@ -49,21 +49,21 @@ void drawScoreDigit(ScoreDigit* digit, GLfloat translateX, GLfloat translateZ) {
 
     glPushMatrix();
         digit->h1 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX + 1, 6, translateZ);
+        glTranslatef(translateX + 1, 6 + translateY, translateZ);
         glScalef(1, 0.2, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     glPushMatrix();
         digit->h2 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX + 1, 4, translateZ);
+        glTranslatef(translateX + 1, 4 + translateY, translateZ);
         glScalef(1, 0.2, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
 
     glPushMatrix();
         digit->h3 ? glColor3f(1, 1, 1) : glColor3f(0, 0, 0);
-        glTranslatef(translateX + 1, 2, translateZ);
+        glTranslatef(translateX + 1, 2 + translateY, translateZ);
         glScalef(1, 0.2, 0.1);
         glutSolidCube(1.0);
     glPopMatrix();
