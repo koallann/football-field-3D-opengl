@@ -43,8 +43,34 @@ void drawCrossbars();
 void drawGrandStand();
 void checkGoal();
 
+GLuint groundTexId;
+
+void load2DTexture(GLuint id, char* filePath) {
+    int width, height, channels = 0;
+    unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
+
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGB,
+        width, height, 0,
+        GL_RGB, GL_UNSIGNED_BYTE, data
+    );
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
+    glEnable(GL_TEXTURE_2D);
+
+    glGenTextures(1, &groundTexId);
+    load2DTexture(groundTexId, "assets/texture_field.jpg");
 
     leftScoreDigit = malloc(sizeof(ScoreDigit));
     rightScoreDigit = malloc(sizeof(ScoreDigit));
@@ -162,9 +188,15 @@ void onSpecialKeyPress(int key, int x, int y) {
 
 void drawField() {
     glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, groundTexId);
+        glBegin(GL_QUADS);
         glColor3f(COLOR_FIELD_R, COLOR_FIELD_G, COLOR_FIELD_B);
-        glScalef(GROUND_LENGTH, GROUND_HEIGHT, GROUND_WIDTH);
-        glutSolidCube(1.0f);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-(GROUND_LENGTH/2), 0, -(GROUND_WIDTH/2));
+        glTexCoord2f(0.0, 1.0); glVertex3f((GROUND_LENGTH/2), 0, -(GROUND_WIDTH/2));
+        glTexCoord2f(1.0, 1.0); glVertex3f((GROUND_LENGTH/2), 0, (GROUND_WIDTH/2));
+        glTexCoord2f(1.0, 0.0); glVertex3f(-(GROUND_LENGTH/2), 0, (GROUND_WIDTH/2));
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
 
