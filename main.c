@@ -51,6 +51,8 @@ void drawScore();
 void drawBall();
 void drawCrossbars();
 void drawGrandStand();
+void drawSpotlights();
+
 void checkGoal();
 
 void init() {
@@ -95,6 +97,7 @@ void display() {
     drawBall();
     drawCrossbars();
     drawGrandStand();
+    drawSpotlights();
 
     glFlush();
 }
@@ -327,6 +330,36 @@ void drawGrandStand() {
 
     drawObj(topGrandStand);
     drawObj(bottomGrandStand);
+}
+
+void drawSpotlight(GLfloat x, GLfloat z, GLfloat yInclination) {
+    glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(x, 3.5, z);
+        glScalef(0.25, 7, 0.25);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(x, 7, z);
+        glRotatef(yInclination, 0, 1, 0);
+        glScalef(2, 2, 0.25);
+        glutSolidCube(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+        glColor3f(1, 1, 1);
+        glTranslatef(x, 7, z);
+        glRotatef(yInclination, 0, 1, 0);
+        glScalef(1.25, 1.25, 0.0);
+        glutSolidCube(1.0);
+    glPopMatrix();
+}
+
+void drawSpotlights() {
+    drawSpotlight(-(FIELD_LENGTH/2)-2, -(FIELD_WIDTH/2)-1, 45);
+    drawSpotlight((FIELD_LENGTH/2)+2, -(FIELD_WIDTH/2)-1, -45);
 }
 
 void checkBallWithinNet(int isLeft) {
