@@ -11,6 +11,9 @@
 #define SIMPLE_OBJ_IMP
 #include "lib/obj_loader/obj_loader.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "lib/img_loader/stb_image.h"
+
 GLfloat aspect = 1;
 
 GLdouble cameraTranslateX = 0;
