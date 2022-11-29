@@ -67,6 +67,7 @@ void load2DTexture(GLuint id, char* filePath) {
 
 void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
     glGenTextures(1, &groundTexId);
