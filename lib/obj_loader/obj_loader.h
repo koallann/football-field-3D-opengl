@@ -16,23 +16,6 @@
 #define OBJ_VERTEX_TEX_CORD "vt"
 #define OBJ_GROUP "g"
 
-/* Simple Obj Loader
-
-   v0.2.0
-   Author: MacDue
-   License: Unlicense
-
-   Loading and drawing Wavefront .obj files.
-   Supports a subset of the full .obj formal.
-
-   - Vertices (v)
-   - Vertex normals (vn)
-   - Texture coordinates (vt)
-   - Faces (f)
-   - Groups (g)
-   - Simple uncached drawing
-*/
-
 typedef struct ObjDataArray {
   void* data;
   int len;

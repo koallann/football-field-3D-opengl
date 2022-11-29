@@ -59,6 +59,8 @@ void init() {
     glClearColor(COLOR_SKY_R, COLOR_SKY_G, COLOR_SKY_B, 1);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_AUTO_NORMAL);
+    glEnable(GL_NORMALIZE);
 
     glGenTextures(2, texId);
     load2DTexture(texId[0], "assets/texture_field.jpg");
@@ -76,20 +78,34 @@ void lighting() {
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, INTENSITY_AMBIENT_LIGHT);
-    setLight(isDay ? LIGHT_DAY : LIGHT_NIGHT);
 }
 
-void setLight(const GLfloat light[4][4]) {
+void setLightProperties(const GLfloat light[4][4]) {
     glLightfv(GL_LIGHT0, GL_POSITION, light[0]);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light[1]);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light[2]);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light[3]);
 }
 
+void setLight() {
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, INTENSITY_AMBIENT_LIGHT);
+    setLightProperties(isDay ? LIGHT_DAY : LIGHT_NIGHT);
+
+    /*if (!isDay) {
+        float position[4] = {5, 5, 5, 1.0};
+        float diffuse[4] = {0.8, 0.8, 0.8, 1.0};
+        float specular[4] = {1.0, 1.0, 1.0, 1.0};
+
+        glEnable(GL_LIGHT1);
+        glLightfv(GL_LIGHT1, GL_POSITION, position);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+        glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+    }*/
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+    setLight();
 
     drawField();
     drawFieldLines();
@@ -182,7 +198,6 @@ void onKeyPress(unsigned char key, int x, int y) {
             break;
         case 'l':
             isDay = !isDay;
-            setLight(isDay ? LIGHT_DAY : LIGHT_NIGHT);
             break;
         default:
             break;
